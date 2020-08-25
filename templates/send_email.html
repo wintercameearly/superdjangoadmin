@@ -9,30 +9,33 @@
 
 {% block bodyclass %}{{ block.super }} app-{{ opts.app_label }} model-{{ opts.model_name }} delete-confirmation{% endblock %}
 {% block breadcrumbs %}
-<div class="breadcrumbs">
-<a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
-&rsaquo; <a href="{% url 'admin:app_list' app_label='auth' %}">{% trans "Users" %}</a>
-&rsaquo; <span>Send email</span>
-</div>
+    <div class="breadcrumbs">
+        <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+        &rsaquo; <a href="{% url 'admin:app_list' app_label='auth' %}">{% trans "Users" %}</a>
+        &rsaquo; <span>Send email</span>
+    </div>
 {% endblock %}
 
 {% block usertools %}
-{{block.super}}
-     <div id="user-tools">
-            {% block welcome-msg %}
-                {{block.super}}
-            {% endblock %}
-            {% block userlinks %}
-                {{block.super}}
-            {% endblock %}
-        </div>
+    {{block.super}}
+    <div id="user-tools">
+        {% block welcome-msg %}
+            {{block.super}}
         {% endblock %}
+        {% block userlinks %}
+            {{block.super}}
+        {% endblock %}
+    </div>
+{% endblock %}
+
 
 {% block coltype %} {{ block.super }}
 flex{% endblock %}
 
+
 {% block content %}
 {{block.super}}
+    <!-- Form for sending email to Email view -->
     <form action="/admin/auth/user/send_email/" method="post">
         {% csrf_token %}
         <h5>Broadcast Email to all Users</h5>

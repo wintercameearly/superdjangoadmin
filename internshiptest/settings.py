@@ -21,12 +21,12 @@ TEMPLATE_DIR = os.path.join(BASE_DIR, "templates")
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'i1vg-v6+a2@is5l6_e2*0r394=_356$5^9%s)npwu!!_51g-r$'
+SECRET_KEY = 'jbbbuokbndbjhufrinfriuhfrinkrnurfub'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['nifemiinternshiptest.herokuapp.com']
+ALLOWED_HOSTS = ['nifemiinternshiptest.herokuapp.com','127.0.0.1','*']
 
 # Application definition
 
@@ -131,3 +131,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 prod_db = dj_database_url.config(conn_max_age=500)
 DATABASES['default'].update(prod_db)
+
+
+

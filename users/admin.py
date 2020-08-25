@@ -12,6 +12,7 @@ from django.core.mail import send_mass_mail, BadHeaderError, EmailMessage
 from django.db.models.functions import TruncDay, TruncMonth, TruncWeek
 
 
+# Inherit the Default User Model
 class CustomUserAdmin(UserAdmin):
     def __init__(self, *args, **kwargs):
         super(UserAdmin, self).__init__(*args, **kwargs)
@@ -40,6 +41,7 @@ class CustomUserAdmin(UserAdmin):
             updated,
         ) % updated, messages.SUCCESS)
 
+    # Url and view function to send emails
     def get_urls(self):
         urls = super().get_urls()
         my_urls = [
@@ -66,31 +68,38 @@ class CustomUserAdmin(UserAdmin):
         else:
             return redirect("/admin")
 
+    # Alter default list view in order to add chart data and user metrics data
     def changelist_view(self, request, extra_context=None):
+        # Data in metrics chart
         chart_data = (
             User.objects.annotate(date=TruncDay("date_joined"))
                 .values("date")
                 .annotate(y=Count("id"))
                 .order_by("-date")
         )
+        # Monthly user creation metrics
         month_data = (
             User.objects.annotate(date=TruncMonth("date_joined"))
                 .values("date")
                 .annotate(y=Count("id"))
                 .order_by("-date")
         )
+        # Weekly user creation metrics
         weekly_data = (
             User.objects.annotate(date=TruncWeek("date_joined"))
                 .values("date")
                 .annotate(y=Count("id"))
                 .order_by("-date")
         )
+        # Convert to Json for the chart input
         as_json = json.dumps(list(chart_data), cls=DjangoJSONEncoder)
-        extra_context = extra_context or {"chart_data": as_json, "weekly_data":weekly_data,"monthly_data":month_data }
+        # Pass all data into the change_list context
+        extra_context = extra_context or {"chart_data": as_json, "weekly_data": weekly_data, "monthly_data": month_data}
 
         return super().changelist_view(request, extra_context=extra_context)
 
 
+# Unregister and Re-register to add defined methods
 admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
 
